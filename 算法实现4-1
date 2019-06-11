@@ -1,1 +1,66 @@
+#include<bits/stdc++.h>
+  using namespace std;
+  #define M 100
+  int array1[M];
+  int array2[M];
+  void arange(int array1[M],int array2[M],int n){
+      int array3[M];//存储起始时间点
+      memset(array3,0,sizeof(array3));//作用是标记该活动是否已经找到会场。
+      int maxnum=0;//需要的会场的个数
+     int t=0;//记录当前活动的序号
+     int s=0;//每个会场的活动个数
+     int counts=0;//记录总共标记的活动数
+     while(true){
+         s=0;//开始新的一个会场的活动
+         t=0;
+         for(int i=t;i<n;i++){
+            if(array3[i]==1) continue;//已标记的活动直接跳过
+                 for(int j=i;j<n;j++){//寻找下一个相容的活动，找到就break
+                      s++;//遍历活动，加一
+                     if(s==1){//如果是第一个没归入会场的活动标记下来，归入新会场的第一个活动
+                         array3[i]=1;
+                         counts++;//已经加入活动的数目加一
+                     }
+                 if(array2[i]<array1[j] && array3[j]==0){//得到下一个相容的活动。，归入新的会场，结束循环
+                     array3[j]=1;
+                     t=j;//更新归入的活动的坐标，下次从这个活动向后找
+                     counts++;//已经加入会场的数目加一
+                     break;
+                 }
+         }
+         }
+         maxnum++;//会场的数目加一
+         if(counts==n){//所有活动处理完，结束
+             break;
+         }
+     }
+     cout << maxnum;
+ }
+ int main()
+ {
+     int n;
+     cin >> n;
+     memset(array1,0,sizeof(array1));//用户输入的活动的起始点
+     memset(array2,0,sizeof(array2));//用户输入的活动的结束时间
+     for(int i=0;i<n;i++){
+         cin >> array1[i] >> array2[i];
+     }
+     int array3[n];
+     int array4[n];//存储终止时间点
+     memset(array3,0,sizeof(array3));//存储排序后的活动的起始点
+     memset(array4,0,sizeof(array4));//存储排序后的活动的终止时间点
+      for(int i=0;i<n;i++){//复制一下起始时间，
+         array3[i]=array1[i];
+     }
+     sort(array3,array3+n);//所有的活动根据起始时间进行排序用array3和array4进行存储
+       for(int i=0;i<n;i++){
+         for(int j=0;j<n;j++)
+         {
+             if(array1[j]==array3[i]){
+                 array4[i]=array2[j];
+             }
+         }
+     }
+       arange(array3,array4,n);
+ }
 
