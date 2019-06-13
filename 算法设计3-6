@@ -1,0 +1,29 @@
+#include<iostream>
+using namespace std;
+int rent[1000][1000];//租金数组
+int haha(int n){//n为游船出租站
+	int t;//设置变量t
+	for(int i=n-2; i>=1; i--){//起始站i从1开始，>=1，则减1
+		for(int j=i+2; j<=n; j++){//终点站从3开始，2个出租站开始找最优解，逐步计算两个出租站之间的最优解
+			for(int k=i+1; k<j; k++){//在i到j中找某一站k，使得 rent[i][k] + rent[k][j]相加最小
+				t = rent[i][k] + rent[k][j];//来回费用相加
+				if(t<rent[i][j]){
+					rent[i][j] = t;
+				}
+			}
+		}
+	}
+	return rent[1][n];//返回租金
+}
+ 
+int main(){//主函数输入
+	int n;
+	cin>>n;//输入游船出租站数
+	for(int i=1; i<n; i++){//输入起点站和终点站的租金
+		for(int j=i+1; j<=n; j++){//记录两点之间租金
+			cin>>rent[i][j];
+		}
+	}
+	cout<<haha(n);//输出结果
+	
+}
