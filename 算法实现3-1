@@ -1,0 +1,29 @@
+#include<stdio.h>
+#define n 6         //6个作业
+#define MAXTIME 500
+int a[n+1]={0,2,5,7,10,5,2};//6个作业在a[]上的处理运行时间
+int b[n+1]={0,3,8,4,11,3,4};//6个作业在b[]上的处理运行时间
+int minTime=10000;
+int sa=0;
+int p[MAXTIME][n+1]={0};
+
+int main(){
+    for(int k=1;k<=n;k++){  //代表作业
+        sa+=a[k];       //假设都在A上运行，得出时间总和sa
+
+        for(int i=0;i<=sa;i++){//i<sa时间和的话
+            p[i][k]=p[i][k-1]+b[k];//将完成前[k-1]个作业时机器a所花费的时间+第k个作业由b来处理的时间和赋值给p[i][k]
+            if(i>=a[k]){             //判断当前时间是否满足其在机器a上运行
+                p[i][k]=p[i][k]<p[i-a[k]][k-1]?p[i][k]:p[i-a[k]][k-1];//小于的话选择p[i][k]存储，大于的话则完成k-1个作业时机器a花费的时间是i-a[k]
+            }
+        }
+    }
+    for(int i=0;i<=sa;i++){         //遍历p数组，p[i][n]的值是n个作业在B上运行时间，i意思是n个作业在A上运行时间
+        int t=(p[i][n]>i?p[i][n]:i);//任务在a上处理时间>i的话，则为其本身，否则为i
+        if(minTime>t)//如果最小时间minTime>t
+            minTime=t;//则将t赋值给minTime
+    }
+                
+    printf("%d\n",minTime);//输出minTime
+    return 0;
+}
