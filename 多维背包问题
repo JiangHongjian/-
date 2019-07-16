@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int n;    //物品的数量
+int m;   //物品的约束条件数量
+int w[100][100];  //物品的属性
+int c[100];    //约束条件
+int cw[100]={0};   //当前属性值
+double v[100];  //物品价值
+double cv=0;   //当前背包价值
+double bestv=0;//当前最大的价值
+
+void getBest(int i)
+{
+    int k;    
+    if(i>=n)    //递归结束的判定条件，参数i超过物品数量，结束
+        return;
+    for(k=0;k<m;k++)   //对物品约束条件的数量进行遍历
+        if(cw[k]+w[i][k]>c[k])   //当前属性+已选物品属性超过了属性的约束条件，则不满足约束条件，结束 
+            return ;
+    for(k=0;k<m;k++)   //否则自身加上当前选择的物品的属性值 ，记录到当前属性值cw[]数组中
+        cw[k]+=w[i][k];
+    cv+=v[i];   //并且，加上当前选择物品的价值，用当前背包价值cv记录 
+    if(cv>bestv)  //如果当前背包价值>当前最大价值
+        bestv=cv;   //更新当前最大收益
+    k=i+1;   //计算下一个节点要不要加入背包
+    while(k<n)  //k<物品数量
+        getBest(k++);   //对右边节点调用函数自身，递归下去 
+    cv-=v[i];   //此时，回溯还原价值到上一个状态 
+    for(k=0;k<m;k++)    //同时
+        cw[k]-=w[i][k];    //回溯还原属性约束到上一个状态  
+    getBest(i+1);   //继续选取下一个节点求最佳
+}
+
+int main(){
+    int i,j;
+    printf("请输入物品的数量n和约束条件m的个数：");
+    scanf("%d %d",&n,&m);           //记录到n和m中
+    printf("请输入这%d个物品的价值:\n",n);
+    for(i=0;i<n;i++){     //物品数和价值数相等
+        scanf("%lf",&v[i]);     //价值记录到数组v[]中，这里共n个物品
+	}
+    for(j=0;j<m;j++){     //以i列j行输入为例子，实现提示输入物品的属性，存到数组w[][]中
+        printf("请依次输入%d个物品的第%d种属性:\n",n,j+1);             
+		for(i=0;i<n;i++){
+        scanf("%d",&w[i][j]);
+		}
+	}
+	printf("请依次输入该%d个物品属性的约束值:\n",m);//输入n个物品m钟约束条件数量的约束值
+    for(i=0;i<m;i++){
+        scanf("%d",&c[i]);
+    }
+	getBest(0);     //参数0，调用函数
+    printf("最优价值为：%lf\n",bestv);//输出最大价值
+    system("PAUSE");
+	return 0;
+}
