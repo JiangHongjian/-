@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 
 int n;    //物品的数量
 int m;   //物品的约束条件数量
@@ -52,6 +51,5 @@ int main(){
     }
 	getBest(0);     //参数0，调用函数
     printf("最优价值为：%lf\n",bestv);//输出最大价值
-    system("PAUSE");
 	return 0;
 }
